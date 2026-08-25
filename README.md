@@ -7,7 +7,7 @@ business workflows, and common operational pain points.
 
 Open the published version at:
 
-https://tomasbb0.github.io/revolut-business-product-map/
+https://tomasbb0-revolut-business-map.netlify.app/
 
 The map includes:
 
