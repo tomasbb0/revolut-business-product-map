@@ -6,10 +6,10 @@
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Revolut Business Plan Flow</title>
-<style>:root{color-scheme:light;background:rgb(255 255 255)}html,body{margin:0;overflow:hidden}body{box-sizing:border-box;padding:0;background:inherit}iframe{display:block;width:100%;height:100vh;margin:0 auto;border:0;overflow:hidden}</style>
+<style>:root{color-scheme:light;background:rgb(255 255 255)}html,body{margin:0}body{box-sizing:border-box;padding:0;background:inherit}iframe{display:block;width:100%;height:100vh;margin:0 auto;border:0;overflow:hidden}</style>
 </head>
 <body>
-<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Revolut Business Plan Flow" scrolling="no" srcdoc="&lt;!doctype html&gt;
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Revolut Business Plan Flow" srcdoc="&lt;!doctype html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
 &lt;meta charset=&quot;utf-8&quot;&gt;
@@ -879,6 +879,7 @@ html&gt;body{padding:0}&lt;/style&gt;
     #revolut-flow-bilingual {
       color: var(--foreground);
       width: 100%;
+      padding-top: 1.4rem;
       max-width: 1040px;
       margin: 0 auto;
       font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;
@@ -922,14 +923,24 @@ html&gt;body{padding:0}&lt;/style&gt;
       position: relative;
       isolation: isolate;
       width: 100dvw;
-      min-height: calc(100dvh - 5.5rem);
+      /* Diagram width follows the viewport height so header, diagram and plan panel fit without scrolling. */
+      --svg-w: max(520px, min(840px, 100dvw, calc((100dvh - 232px) / 0.746), calc((100dvh - 216px - 21dvw) / 0.373)));
+      /* Diagram centre below the SVG top: (480 minus 122) / 960 of the width. */
+      --diag-cy: calc(0.373 * var(--svg-w));
+      /* Free vertical space split evenly above and below the diagram, measured from the summary text. */
+      --gap-free: calc((100dvh - var(--header-h, 82px) - 0.746 * var(--svg-w) - 118px - 2px) / 2);
+      /* Wedge slope 0.42, same as the SVG path: the line climbs 21dvw between the centre and the right edge. */
+      --diag-shift: max(16px, calc(21dvw - var(--diag-cy)), var(--gap-free));
+      --panel-gap: clamp(16px, calc(100dvh - var(--header-h, 82px) - var(--diag-shift) - 0.746 * var(--svg-w) - 118px), calc(var(--diag-shift) + 2px));
+      padding-top: var(--diag-shift);
+      min-height: max(calc(100dvh - var(--header-h, 82px)), calc(var(--diag-shift) + var(--diag-cy) + 21dvw + 1px));
       max-width: none;
       margin-left: 50%;
       margin-right: 0;
       margin-top: 0.15rem;
       transform: translateX(-50%);
       background: var(--background);
-      overflow: hidden;
+      overflow: visible;
     }
     #revolut-flow-bilingual .dashboard-stage::before {
       content: &quot;&quot;;
@@ -939,8 +950,8 @@ html&gt;body{padding:0}&lt;/style&gt;
       pointer-events: none;
       background: var(--foreground);
       clip-path: polygon(
-        0 calc(min(420px, 50dvw) + 30dvw),
-        100% calc(min(420px, 50dvw) - 30dvw),
+        0 calc(var(--diag-shift) + var(--diag-cy) + 21dvw),
+        100% calc(var(--diag-shift) + var(--diag-cy) - 21dvw),
         100% 100%,
         0 100%
       );
@@ -948,8 +959,8 @@ html&gt;body{padding:0}&lt;/style&gt;
     #revolut-flow-bilingual .diagram-wrap {
       position: relative;
       z-index: 3;
-      width: 100%;
-      max-width: 840px;
+      width: var(--svg-w);
+      max-width: 100%;
       margin: 0 auto;
     }
     #revolut-flow-bilingual .plan-details-panel {
@@ -1260,6 +1271,16 @@ html&gt;body{padding:0}&lt;/style&gt;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
+    /* Compact panel: top margin mirrors the diagram's top offset so the gaps above and below the diagram match. */
+    #revolut-flow-bilingual .plan-details-panel {
+      margin: var(--panel-gap, 0px) auto 0.35rem;
+      padding: 0.45rem 0.9rem 0.4rem;
+    }
+    #revolut-flow-bilingual .metrics { gap: 0.28rem; }
+    #revolut-flow-bilingual .metrics .viz-badge { padding: 0.1rem 0.45rem; font-size: 10.5px; line-height: 1.3; }
+    #revolut-flow-bilingual .notes { margin-top: 0.25rem; font-size: 11px; line-height: 1.28; }
+    #revolut-flow-bilingual .notes li { margin: 0; }
+    #revolut-flow-bilingual .source-line { margin-top: 0.15rem; font-size: 10.5px; }
     #revolut-flow-bilingual .mobile-flow {
       display: none;
       margin: 0.65rem 0;
@@ -1898,7 +1919,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
   &lt;div class=&quot;dashboard-stage&quot;&gt;
   &lt;div class=&quot;diagram-wrap&quot;&gt;
-    &lt;svg class=&quot;flow-svg&quot; viewBox=&quot;0 0 960 960&quot; role=&quot;img&quot; aria-labelledby=&quot;revolut-flow-bi-svg-title revolut-flow-bi-svg-desc&quot;&gt;
+    &lt;svg class=&quot;flow-svg&quot; viewBox=&quot;0 122 960 716&quot; role=&quot;img&quot; aria-labelledby=&quot;revolut-flow-bi-svg-title revolut-flow-bi-svg-desc&quot;&gt;
       &lt;title id=&quot;revolut-flow-bi-svg-title&quot;&gt;How a business uses Revolut Business&lt;/title&gt;
       &lt;desc id=&quot;revolut-flow-bi-svg-desc&quot;&gt;A diagonally divided dashboard connecting a business to customers, employees, suppliers, finance, software, cash, and currency management. Product labels are interactive.&lt;/desc&gt;
       &lt;defs&gt;
@@ -1910,8 +1931,8 @@ html&gt;body{padding:0}&lt;/style&gt;
         &lt;/marker&gt;
       &lt;/defs&gt;
 
-      &lt;rect class=&quot;ecosystem-base&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;960&quot; height=&quot;960&quot;&gt;&lt;/rect&gt;
-      &lt;path class=&quot;ecosystem-inverted&quot; d=&quot;M960 192 V960 H0 V768 Z&quot;&gt;&lt;/path&gt;
+      &lt;rect class=&quot;ecosystem-base&quot; x=&quot;0&quot; y=&quot;122&quot; width=&quot;960&quot; height=&quot;578&quot;&gt;&lt;/rect&gt;
+      &lt;path class=&quot;ecosystem-inverted&quot; d=&quot;M962 277.56 V838 H-2 V682.44 Z&quot;&gt;&lt;/path&gt;
       &lt;text class=&quot;zone-label is-stakeholder&quot; x=&quot;40&quot; y=&quot;350&quot; data-zone-label=&quot;stakeholder&quot;&gt;&lt;/text&gt;
       &lt;text class=&quot;zone-label is-platform&quot; x=&quot;920&quot; y=&quot;610&quot; data-zone-label=&quot;platform&quot;&gt;&lt;/text&gt;
 
@@ -3341,7 +3362,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           overviewCategory: &#x27;All 20 product topics&#x27;,
           overviewTitle: &#x27;Traditional-process pain map&#x27;,
           overviewCallout: &#x27;Start with the top-ranked pains, but only when the prospect shows the relevant trigger. This ranks discovery opportunities; it is not a claim that Revolut will automatically remove every cost.&#x27;,
-          overviewScope: &#x27;One global scale is used across every feature for Portuguese SMBs below approximately €15m revenue. Size is evidence-led; Depth and Priority are illustrative assessments, not Revolut metrics.&#x27;,
+          overviewScope: &#x27;One global scale is used across every feature for Portuguese SMBs below approximately €15m revenue. Size is evidence-led; Depth and Priority are interview-coaching judgements, not Revolut metrics.&#x27;,
           sizeLegend: &#x27;Size · 1 &lt;10%; 2 = 10–24%; 3 = 25–49%; 4 = 50–74%; 5 ≥75%. A dashed pie means no robust prevalence rate was found.&#x27;,
           depthLegend: &#x27;Depth · 1 small inconvenience; 3 material recurring time/cost; 5 severe cash-flow, fraud, payroll or systemic risk.&#x27;,
           priorityLegend: &#x27;Priority · 1 optional; 3 ask when a trigger is visible; 5 ask early because the pain can materially affect cash, revenue or control.&#x27;,
@@ -3365,7 +3386,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           overviewCategory: &#x27;Todos os 20 temas de produto&#x27;,
           overviewTitle: &#x27;Mapa de dores dos processos tradicionais&#x27;,
           overviewCallout: &#x27;Comece pelas dores no topo do ranking, mas apenas quando o potencial cliente mostrar o sinal relevante. Isto prioriza perguntas de descoberta; não promete que a Revolut elimina automaticamente todos os custos.&#x27;,
-          overviewScope: &#x27;É usada uma escala global em todas as funcionalidades para PMEs portuguesas abaixo de aproximadamente 15 M€. Dimensão usa evidência; Profundidade e Prioridade são avaliações ilustrativas, não métricas Revolut.&#x27;,
+          overviewScope: &#x27;É usada uma escala global em todas as funcionalidades para PMEs portuguesas abaixo de aproximadamente 15 M€. Dimensão usa evidência; Profundidade e Prioridade são juízos de preparação para a entrevista, não métricas Revolut.&#x27;,
           sizeLegend: &#x27;Dimensão · 1 &lt;10%; 2 = 10–24%; 3 = 25–49%; 4 = 50–74%; 5 ≥75%. Um círculo tracejado significa que não foi encontrada uma taxa robusta.&#x27;,
           depthLegend: &#x27;Profundidade · 1 pequeno incómodo; 3 tempo/custo recorrente material; 5 risco grave de tesouraria, fraude, salários ou sistema.&#x27;,
           priorityLegend: &#x27;Prioridade · 1 opcional; 3 perguntar quando há um sinal; 5 perguntar cedo porque pode afetar materialmente dinheiro, receita ou controlo.&#x27;,
@@ -3523,7 +3544,7 @@ html&gt;body{padding:0}&lt;/style&gt;
           process: { en: &#x27;Open generic support cases and repeat context across specialist queues&#x27;, pt: &#x27;Abrir pedidos genéricos e repetir o contexto entre equipas especializadas&#x27; },
           pain: { en: &#x27;Slower resolution and more customer effort on complex account or integration issues.&#x27;, pt: &#x27;Resolução mais lenta e maior esforço em problemas complexos de conta ou integração.&#x27; },
           size: 1, prevalence: { en: &#x27;No robust Portuguese-SMB prevalence rate found&#x27;, pt: &#x27;Não foi encontrada uma taxa robusta para PMEs portuguesas&#x27; },
-          scope: { en: &#x27;Illustrative estimate only&#x27;, pt: &#x27;Apenas estimativa ilustrativa&#x27; },
+          scope: { en: &#x27;Coaching estimate only&#x27;, pt: &#x27;Apenas estimativa de preparação&#x27; },
           source: null, estimate: true, depth: 3, priority: 2, relevance: 8
         }
       };
@@ -4532,6 +4553,18 @@ html&gt;body{padding:0}&lt;/style&gt;
   document
     .getElementById(&quot;codex-visualization-lucide&quot;)
     ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;script&gt;
+(() =&gt; {
+  const root = document.getElementById(&#x27;revolut-flow-bilingual&#x27;);
+  const stage = root &amp;&amp; root.querySelector(&#x27;.dashboard-stage&#x27;);
+  if (!stage) return;
+  const sync = () =&gt; root.style.setProperty(&#x27;--header-h&#x27;, Math.round(stage.getBoundingClientRect().top + window.scrollY) + &#x27;px&#x27;);
+  sync();
+  window.addEventListener(&#x27;resize&#x27;, sync);
+  window.addEventListener(&#x27;load&#x27;, sync);
 })();
 &lt;/script&gt;
 
